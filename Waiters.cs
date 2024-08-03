@@ -1,46 +1,42 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public static class Waiters
 {
-    static Dictionary<(float, int), WaitForSeconds> timeInterval = new Dictionary<(float, int), WaitForSeconds>(500);
-    static Dictionary<(float, int), WaitForSecondsRealtime> timeIntervalRealtime = new Dictionary<(float, int), WaitForSecondsRealtime>(500);
-    static WaitForFixedUpdate fixedUpdate = new WaitForFixedUpdate();
-    static WaitForEndOfFrame endOfFrame = new WaitForEndOfFrame();
+    private static readonly Dictionary<float, WaitForSeconds> _timeIntervals = new Dictionary<float, WaitForSeconds>();
+    private static readonly Dictionary<float, WaitForSecondsRealtime> _timeIntervalsRealtime = new Dictionary<float, WaitForSecondsRealtime>();
+    private static readonly WaitForFixedUpdate _fixedUpdate = new WaitForFixedUpdate();
+    private static readonly WaitForEndOfFrame _endOfFrame = new WaitForEndOfFrame();
+    private static readonly Random _random = new Random();
 
-    public static WaitForEndOfFrame EndOfFrame
-    {
-        get { return endOfFrame; }
-    }
-  
-    public static WaitForFixedUpdate FixedUpdate
-    {
-        get { return fixedUpdate; }
-    }
-        
-    public static WaitForSeconds Wait(float seconds, int instanceID)
-    {
-        var key = (seconds, instanceID);
+    public static WaitForEndOfFrame EndOfFrame => _endOfFrame;
+    public static WaitForFixedUpdate FixedUpdate => _fixedUpdate;
 
-        if (timeInterval.ContainsKey(key) == false)
-            timeInterval.Add(key, new WaitForSeconds(seconds));
-
-        return timeInterval[key];
+    public static WaitForSeconds Wait(float seconds)
+    {
+        if (!_timeIntervals.TryGetValue(seconds, out var wait))
+        {
+            wait = new WaitForSeconds(seconds);
+            _timeIntervals[seconds] = wait;
+        }
+        return wait;
     }
 
-    public static WaitForSecondsRealtime WaitRealTime(float seconds, int instanceID)
+    public static WaitForSecondsRealtime WaitRealtime(float seconds)
     {
-        var key = (seconds, instanceID);
-
-        if (timeIntervalRealtime.ContainsKey(key) == false)
-            timeIntervalRealtime.Add(key, new WaitForSecondsRealtime(seconds));
-
-        return timeIntervalRealtime[key];
+        if (!_timeIntervalsRealtime.TryGetValue(seconds, out var wait))
+        {
+            wait = new WaitForSecondsRealtime(seconds);
+            _timeIntervalsRealtime[seconds] = wait;
+        }
+        return wait;
     }
 
     public static WaitForSeconds WaitRandom(float min, float max)
     {
-        return new WaitForSeconds(Random.Range(min, max));
+        float randomSeconds = Mathf.Lerp(min, max, (float)_random.NextDouble());
+        return Wait(randomSeconds);
     }
 }
