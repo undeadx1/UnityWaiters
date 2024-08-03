@@ -1,19 +1,42 @@
-# Unity Waiters
-The Unity Waiters library is a C# utility class designed to manage coroutine waiters in Unity3D. It is aimed at preventing unnecessary memory allocations during gameplay by caching WaitForSeconds and WaitForSecondsRealtime instances, which are frequently used in coroutines.
+# Waiters
 
-# Features
-Stores WaitForEndOfFrame and WaitForFixedUpdate objects to use anywhere in your code.
-Caches WaitForSeconds and WaitForSecondsRealtime instances, based on a unique combination of wait time and instance ID.
-Provides WaitRandom method that returns a new WaitForSeconds object with a random wait time within a specified range.
+Waiters is a utility class for Unity that provides optimized and reusable coroutine wait operations.
 
-# Usage 
-//in the mono class
-..
-yield return Waiters.Wait(sec, GetInstanceID()); 
-..
+## Features
 
-# Benefits
-Using this class can help to avoid unnecessary memory allocations in your game, thus helping to reduce garbage collection events, and potentially improving overall performance.
+- Cached `WaitForSeconds` and `WaitForSecondsRealtime` objects for improved performance
+- Thread-safe implementation
+- Efficient memory usage
+- Randomized wait times
 
-# License
-This project is licensed under the terms of the MIT license. For more information, please see the LICENSE file.
+## Usage
+
+```csharp
+// Wait for a specified number of seconds
+yield return Waiters.Wait(1.5f);
+
+// Wait for a specified number of real-time seconds
+yield return Waiters.WaitRealtime(2.0f);
+
+// Wait for a random time between min and max seconds
+yield return Waiters.WaitRandom(1.0f, 3.0f);
+
+// Wait until the next fixed update
+yield return Waiters.FixedUpdate;
+
+// Wait until the end of the frame
+yield return Waiters.EndOfFrame;
+```
+
+## Installation
+
+1. Copy the `Waiters.cs` file into your Unity project's Assets folder.
+2. Use the `Waiters` class in your coroutines for optimized wait operations.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details.
