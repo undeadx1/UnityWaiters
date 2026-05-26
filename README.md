@@ -5,9 +5,9 @@ Waiters is a utility class for Unity that provides optimized and reusable corout
 ## Features
 
 - Cached `WaitForSeconds` and `WaitForSecondsRealtime` objects for improved performance
-- Thread-safe implementation
 - Efficient memory usage
-- Randomized wait times
+- Randomized wait times with configurable cache precision
+- Manual cache clearing when cached wait intervals are no longer needed
 
 ## Usage
 
@@ -20,6 +20,12 @@ yield return Waiters.WaitRealtime(2.0f);
 
 // Wait for a random time between min and max seconds
 yield return Waiters.WaitRandom(1.0f, 3.0f);
+
+// Wait for a random time using 0.25 second cache buckets
+yield return Waiters.WaitRandom(1.0f, 3.0f, 0.25f);
+
+// Clear cached wait intervals
+Waiters.ClearCache();
 
 // Wait until the next fixed update
 yield return Waiters.FixedUpdate;
@@ -39,4 +45,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
